@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: v1.2.11</em>
+            <em>API Docs for: v1.2.14</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -112,7 +112,7 @@
 
 
 <div class="box intro">
-    <p>Role-based authorization compatible with built-in Meteor accounts package.</p>
+    <p>Authorization package compatible with built-in Meteor accounts system.</p>
 <p>Stores user&#39;s current roles in a &#39;roles&#39; field on the user object.</p>
 
 </div>
@@ -310,6 +310,13 @@
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_subscription">subscription</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -378,7 +385,7 @@
             
         
         
-        <a href="../files/roles_roles_common.js.html#l559"><code>roles&#x2F;roles_common.js:559</code></a>
+        <a href="../files/roles_roles_common.js.html#l558"><code>roles&#x2F;roles_common.js:558</code></a>
         
         </p>
 
@@ -509,7 +516,7 @@ object for MongoDB.  Passed to _updateUserRoles</p>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l534"><code>roles&#x2F;roles_common.js:534</code></a>
+        <a href="../files/roles_roles_common.js.html#l533"><code>roles&#x2F;roles_common.js:533</code></a>
         
         </p>
 
@@ -660,7 +667,7 @@ for MongoDB.  Passed to _updateUserRoles</p>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l585"><code>roles&#x2F;roles_common.js:585</code></a>
+        <a href="../files/roles_roles_common.js.html#l584"><code>roles&#x2F;roles_common.js:584</code></a>
         
         </p>
 
@@ -671,7 +678,7 @@ for MongoDB.  Passed to _updateUserRoles</p>
     </div>
 
     <div class="description">
-        <p>Internal function that users the Template pattern to adds or sets roles 
+        <p>Internal function that uses the Template pattern to adds or sets roles 
 for users.</p>
 
     </div>
@@ -1191,7 +1198,7 @@ are currently assigned to the target role.</p>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l411"><code>roles&#x2F;roles_common.js:411</code></a>
+        <a href="../files/roles_roles_common.js.html#l408"><code>roles&#x2F;roles_common.js:408</code></a>
         
         </p>
 
@@ -1280,7 +1287,7 @@ are currently assigned to the target role.</p>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l486"><code>roles&#x2F;roles_common.js:486</code></a>
+        <a href="../files/roles_roles_common.js.html#l485"><code>roles&#x2F;roles_common.js:485</code></a>
         
         </p>
 
@@ -1410,7 +1417,7 @@ are currently assigned to the target role.</p>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l369"><code>roles&#x2F;roles_common.js:369</code></a>
+        <a href="../files/roles_roles_common.js.html#l366"><code>roles&#x2F;roles_common.js:366</code></a>
         
         </p>
 
@@ -1508,6 +1515,12 @@ are currently assigned to the target role.</p>
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code class="optional">[options]</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -1541,7 +1554,7 @@ are currently assigned to the target role.</p>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l421"><code>roles&#x2F;roles_common.js:421</code></a>
+        <a href="../files/roles_roles_common.js.html#l418"><code>roles&#x2F;roles_common.js:418</code></a>
         
         </p>
 
@@ -1595,6 +1608,24 @@ used automatically.</p>
                     <div class="param-description">
                         <p>Optional name of group to restrict roles to.
                         User&#39;s Roles.GLOBAL_GROUP will also be checked.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[options]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional options which are passed directly
+                          through to <code>Meteor.users.find(query, options)</code></p>
 
                     </div>
 
@@ -1985,7 +2016,7 @@ Roles.setUserRoles(userId, &#39;admin&#39;, Roles.GLOBAL_GROUP)</code></pre>
             
         
         
-        <a href="../files/roles_roles_common.js.html#l257"><code>roles&#x2F;roles_common.js:257</code></a>
+        <a href="../files/roles_roles_common.js.html#l254"><code>roles&#x2F;roles_common.js:254</code></a>
         
         </p>
 
@@ -2168,6 +2199,63 @@ Roles.userIsInRole(user, &#39;admin&#39;) // =&gt; true
 Roles.setUserRoles(user, &#39;support-staff&#39;, Roles.GLOBAL_GROUP)
 Roles.userIsInRole(user, &#39;support-staff&#39;) // =&gt; true
 Roles.userIsInRole(user, &#39;admin&#39;) // =&gt; false</code></pre>
+
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="property_subscription" class="property item">
+    <h3 class="name"><code>subscription</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/roles_client_subscriptions.js.html#l4"><code>roles&#x2F;client&#x2F;subscriptions.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Subscription handle for the currently logged in user&#39;s permissions.</p>
+<p>NOTE: The corresponding publish function, <code>_roles</code>, depends on
+<code>this.userId</code> so it will automatically re-run when the currently
+logged-in user changes.</p>
+
+    </div>
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code><code>Roles.subscription.ready()</code> // =&gt; <code>true</code> if user roles have been loaded</code></pre>
 
             </div>
         </div>

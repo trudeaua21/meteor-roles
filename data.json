@@ -1,12 +1,21 @@
 {
     "project": {
         "name": "The meteor-roles API",
-        "description": "The meteor-roles API: a role-based authorization package for Meteor",
-        "version": "v1.2.11"
+        "description": "The meteor-roles API: an authorization package for Meteor",
+        "version": "v1.2.14"
     },
     "files": {
-        "roles/roles_client.js": {
-            "name": "roles/roles_client.js",
+        "roles/client/subscriptions.js": {
+            "name": "roles/client/subscriptions.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Roles": 1
+            },
+            "namespaces": {}
+        },
+        "roles/client/uiHelpers.js": {
+            "name": "roles/client/uiHelpers.js",
             "modules": {
                 "UIHelpers": 1
             },
@@ -47,7 +56,7 @@
             },
             "namespaces": {},
             "tag": "module",
-            "file": "roles/roles_client.js",
+            "file": "roles/client/uiHelpers.js",
             "line": 3,
             "description": "Convenience functions for use on client.\n\nNOTE: You must restrict user actions on the server-side; any\nclient-side checks are strictly for convenience and must not be\ntrusted."
         },
@@ -66,6 +75,20 @@
         }
     },
     "classes": {
+        "Roles": {
+            "name": "Roles",
+            "shortname": "Roles",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Roles",
+            "file": "roles/roles_common.js",
+            "line": 17,
+            "description": "Authorization package compatible with built-in Meteor accounts system.\n\nStores user's current roles in a 'roles' field on the user object.",
+            "is_constructor": 1
+        },
         "UIHelpers": {
             "name": "UIHelpers",
             "shortname": "UIHelpers",
@@ -76,27 +99,24 @@
             "extension_for": [],
             "module": "UIHelpers",
             "namespace": ""
-        },
-        "Roles": {
-            "name": "Roles",
-            "shortname": "Roles",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "Roles",
-            "namespace": "",
-            "file": "roles/roles_common.js",
-            "line": 17,
-            "description": "Role-based authorization compatible with built-in Meteor accounts package.\n\nStores user's current roles in a 'roles' field on the user object.",
-            "is_constructor": 1
         }
     },
     "classitems": [
         {
-            "file": "roles/roles_client.js",
-            "line": 23,
+            "file": "roles/client/subscriptions.js",
+            "line": 4,
+            "description": "Subscription handle for the currently logged in user's permissions.\n\nNOTE: The corresponding publish function, `_roles`, depends on\n`this.userId` so it will automatically re-run when the currently\nlogged-in user changes.",
+            "example": [
+                "\n\n    `Roles.subscription.ready()` // => `true` if user roles have been loaded"
+            ],
+            "itemtype": "property",
+            "name": "subscription",
+            "type": "Object",
+            "class": "Roles"
+        },
+        {
+            "file": "roles/client/uiHelpers.js",
+            "line": 24,
             "description": "UI helper to check if current user is in at least one\nof the target roles.  For use in client-side templates.",
             "example": [
                 "\n    {{#if isInRole 'admin'}}\n    {{/if}}\n\n    {{#if isInRole 'editor,user'}}\n    {{/if}}\n\n    {{#if isInRole 'editor,user' 'group1'}}\n    {{/if}}"
@@ -274,7 +294,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 257,
+            "line": 254,
             "description": "Check if user has specified permissions/roles",
             "example": [
                 "\n    // non-group usage\n    Roles.userIsInRole(user, 'admin')\n    Roles.userIsInRole(user, ['admin','editor'])\n    Roles.userIsInRole(userId, 'admin')\n    Roles.userIsInRole(userId, ['admin','editor'])\n\n    // per-group usage\n    Roles.userIsInRole(user,   ['admin','editor'], 'group1')\n    Roles.userIsInRole(userId, ['admin','editor'], 'group1')\n    Roles.userIsInRole(userId, ['admin','editor'], Roles.GLOBAL_GROUP)\n\n    // this format can also be used as short-hand for Roles.GLOBAL_GROUP\n    Roles.userIsInRole(user, 'admin')"
@@ -308,7 +328,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 369,
+            "line": 366,
             "description": "Retrieve users roles",
             "itemtype": "method",
             "name": "getRolesForUser",
@@ -334,7 +354,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 411,
+            "line": 408,
             "description": "Retrieve set of all existing roles",
             "itemtype": "method",
             "name": "getAllRoles",
@@ -347,7 +367,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 421,
+            "line": 418,
             "description": "Retrieve all users who are in target role.  \n\nNOTE: This is an expensive query; it performs a full collection scan\non the users collection since there is no index set on the 'roles' field.  \nThis is by design as most queries will specify an _id so the _id index is \nused automatically.",
             "itemtype": "method",
             "name": "getUsersInRole",
@@ -362,6 +382,12 @@
                     "description": "Optional name of group to restrict roles to.\n                        User's Roles.GLOBAL_GROUP will also be checked.",
                     "type": "String",
                     "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "Optional options which are passed directly\n                          through to `Meteor.users.find(query, options)`",
+                    "type": "Object",
+                    "optional": true
                 }
             ],
             "return": {
@@ -373,7 +399,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 486,
+            "line": 485,
             "description": "Retrieve users groups, if any",
             "itemtype": "method",
             "name": "getGroupsForUser",
@@ -399,7 +425,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 534,
+            "line": 533,
             "description": "Private function 'template' that uses $set to construct an update object\nfor MongoDB.  Passed to _updateUserRoles",
             "itemtype": "method",
             "name": "_update_$set_fn",
@@ -427,7 +453,7 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 559,
+            "line": 558,
             "description": "Private function 'template' that uses $addToSet to construct an update \nobject for MongoDB.  Passed to _updateUserRoles",
             "itemtype": "method",
             "name": "_update_$addToSet_fn",
@@ -455,8 +481,8 @@
         },
         {
             "file": "roles/roles_common.js",
-            "line": 585,
-            "description": "Internal function that users the Template pattern to adds or sets roles \nfor users.",
+            "line": 584,
+            "description": "Internal function that uses the Template pattern to adds or sets roles \nfor users.",
             "itemtype": "method",
             "name": "_updateUserRoles",
             "access": "protected",
@@ -500,14 +526,14 @@
         {
             "file": "roles/roles_server.js",
             "line": 4,
-            "description": "Roles collection documents consist only of an id and a role name.\n  ex: { _id:<uuid>, name: \"admin\" }",
+            "description": "Roles collection documents consist only of an id and a role name.\n  ex: { _id: \"123\", name: \"admin\" }",
             "class": "",
             "module": "Roles"
         },
         {
             "file": "roles/roles_server.js",
             "line": 16,
-            "description": "Always publish logged-in user's roles so client-side\nchecks can work.",
+            "description": "Publish logged-in user's roles so client-side checks can work.\n\nUse a named publish function so clients can check `ready()` state.",
             "class": "",
             "module": "Roles"
         }
@@ -518,11 +544,11 @@
             "line": " roles/roles_common.js:9"
         },
         {
-            "message": "Missing item type\nRoles collection documents consist only of an id and a role name.\n  ex: { _id:<uuid>, name: \"admin\" }",
+            "message": "Missing item type\nRoles collection documents consist only of an id and a role name.\n  ex: { _id: \"123\", name: \"admin\" }",
             "line": " roles/roles_server.js:4"
         },
         {
-            "message": "Missing item type\nAlways publish logged-in user's roles so client-side\nchecks can work.",
+            "message": "Missing item type\nPublish logged-in user's roles so client-side checks can work.\n\nUse a named publish function so clients can check `ready()` state.",
             "line": " roles/roles_server.js:16"
         }
     ]

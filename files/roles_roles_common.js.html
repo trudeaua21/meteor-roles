@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: v1.2.11</em>
+            <em>API Docs for: v1.2.14</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -105,11 +105,11 @@
  *   ex: { _id:&lt;uuid&gt;, name: &quot;admin&quot; }
  */
 if (!Meteor.roles) {
-  Meteor.roles = new Meteor.Collection(&quot;roles&quot;)
+  Meteor.roles = new Mongo.Collection(&quot;roles&quot;)
 }
 
 /**
- * Role-based authorization compatible with built-in Meteor accounts package.
+ * Authorization package compatible with built-in Meteor accounts system.
  *
  * Stores user&#x27;s current roles in a &#x27;roles&#x27; field on the user object.
  *
@@ -337,10 +337,7 @@ _.extend(Roles, {
       }
     }
     catch (ex) {
-      var removeNonGroupedRoleFromGroupMsg = &#x27;Cannot apply $pull/$pullAll modifier to non-array&#x27; 
-
-      if (ex.name === &#x27;MongoError&#x27; &amp;&amp;
-          ex.err === removeNonGroupedRoleFromGroupMsg) {
+      if (ex.name === &#x27;MongoError&#x27; &amp;&amp; isMongoMixError(ex.err)) {
         throw new Error (mixingGroupAndNonGroupErrorMsg)
       }
 
@@ -526,9 +523,11 @@ _.extend(Roles, {
    *                            specified but need not have _all_ roles.
    * @param {String} [group] Optional name of group to restrict roles to.
    *                         User&#x27;s Roles.GLOBAL_GROUP will also be checked.
+   * @param {Object} [options] Optional options which are passed directly
+   *                           through to &#x60;Meteor.users.find(query, options)&#x60;
    * @return {Cursor} cursor of users in role
    */
-  getUsersInRole: function (role, group) {
+  getUsersInRole: function (role, group, options) {
     var query,
         roles = role,
         groupQuery
@@ -574,7 +573,7 @@ _.extend(Roles, {
       query.$or.push({roles: {$in: roles}})
     }
 
-    return Meteor.users.find(query)
+    return Meteor.users.find(query, options);
   },  // end getUsersInRole 
   
   /**
@@ -677,7 +676,7 @@ _.extend(Roles, {
 
 
   /**
-   * Internal function that users the Template pattern to adds or sets roles 
+   * Internal function that uses the Template pattern to adds or sets roles 
    * for users.
    *
    * @method _updateUserRoles
@@ -778,12 +777,7 @@ _.extend(Roles, {
       }
     }
     catch (ex) {
-      var addNonGroupToGroupedRolesMsg = &#x27;Cannot apply $addToSet modifier to non-array&#x27;,
-          addGrouped2NonGroupedMsg = &quot;can&#x27;t append to array using string field name&quot;
-
-      if (ex.name === &#x27;MongoError&#x27; &amp;&amp;
-          (ex.err === addNonGroupToGroupedRolesMsg ||
-           ex.err.substring(0, 45) === addGrouped2NonGroupedMsg)) {
+      if (ex.name === &#x27;MongoError&#x27; &amp;&amp; isMongoMixError(ex.err)) {
         throw new Error (mixingGroupAndNonGroupErrorMsg)
       }
 
@@ -792,6 +786,26 @@ _.extend(Roles, {
   }  // end _updateUserRoles
 
 })  // end _.extend(Roles ...)
+
+
+function isMongoMixError (errorMsg) {
+  var expectedMessages = [
+      &#x27;Cannot apply $addToSet modifier to non-array&#x27;,
+      &#x27;Cannot apply $addToSet to a non-array field&#x27;,
+      &#x27;Can only apply $pullAll to an array&#x27;,
+      &#x27;Cannot apply $pull/$pullAll modifier to non-array&#x27;,
+      &quot;can&#x27;t append to array using string field name&quot;,
+      &#x27;to traverse the element&#x27;
+      ]
+
+  return _.some(expectedMessages, function (snippet) {
+    return strContains(errorMsg, snippet)
+  })
+}
+
+function strContains (haystack, needle) {
+  return -1 !== haystack.indexOf(needle)
+}
 
 }());
 

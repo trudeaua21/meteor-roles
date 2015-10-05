@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: v1.2.11</em>
+            <em>API Docs for: v1.2.14</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -92,15 +92,15 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-;(function () {
+&quot;use strict&quot;
 
 
 /**
  * Roles collection documents consist only of an id and a role name.
- *   ex: { _id:&lt;uuid&gt;, name: &quot;admin&quot; }
+ *   ex: { _id: &quot;123&quot;, name: &quot;admin&quot; }
  */
 if (!Meteor.roles) {
-  Meteor.roles = new Meteor.Collection(&quot;roles&quot;)
+  Meteor.roles = new Mongo.Collection(&quot;roles&quot;)
 
   // Create default indexes for roles collection
   Meteor.roles._ensureIndex(&#x27;name&#x27;, {unique: 1})
@@ -108,17 +108,22 @@ if (!Meteor.roles) {
 
 
 /**
- * Always publish logged-in user&#x27;s roles so client-side
- * checks can work.
+ * Publish logged-in user&#x27;s roles so client-side checks can work.
+ * 
+ * Use a named publish function so clients can check &#x60;ready()&#x60; state.
  */
-Meteor.publish(null, function () {
-  var userId = this.userId,
-      fields = {roles:1}
+Meteor.publish(&#x27;_roles&#x27;, function () {
+  var loggedInUserId = this.userId,
+      fields = {roles: 1}
 
-  return Meteor.users.find({_id:userId}, {fields: fields})
+  if (!loggedInUserId) {
+    this.ready()
+    return
+  }
+
+  return Meteor.users.find({_id: loggedInUserId},
+                           {fields: fields})
 })
-
-}());
 
     </pre>
 </div>
