@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Meteor 2.3 tests
     steps:
       - uses: actions/checkout@v2
