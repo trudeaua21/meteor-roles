@@ -38,6 +38,7 @@ Package.onTest(function (api) {
   api.use([
     'lmieulet:meteor-packages-coverage@0.2.0',
     'lmieulet:meteor-coverage@3.2.0',
+    'lmieulet:meteor-legacy-coverage',
     'meteortesting:mocha'
   ])
 
